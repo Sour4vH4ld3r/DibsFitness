@@ -1,0 +1,101 @@
+name: dibs-fitness-web
+runtime: nodejs18
+memory: 1GB
+disk: 5GB
+region: us-east-1
+
+# Auto-scaling configuration
+scaling:
+  min_instances: 1
+  max_instances: 3
+  cpu_threshold: 70
+  memory_threshold: 80
+  scale_up_cooldown: 300
+  scale_down_cooldown: 600
+
+# Build configuration
+build:
+  commands:
+    - npm ci --production=false
+    - npm run lint
+    - npm run type-check
+    - npm run build:production
+  output_directory: .next
+  cache_paths:
+    - node_modules
+    - .next/cache
+  timeout: 600
+  
+# Start command
+start:
+  command: npm run start:production
+  
+# Health check configuration
+health_check:
+  path: /api/health
+  interval: 30
+  timeout: 5
+  retries: 3
+  initial_delay: 30
+
+# Environment variables (set via dashboard for security)
+env_vars:
+  NODE_ENV: production
+  PORT: 3000
+  NEXT_TELEMETRY_DISABLED: 1
+
+# Static assets configuration
+static:
+  enabled: true
+  path: public
+  cache_ttl: 31536000 # 1 year
+
+# SSL configuration
+ssl:
+  enabled: true
+  force_https: true
+  hsts: true
+
+# Custom domains (configure in dashboard)
+domains:
+  - yourdomain.com
+  - www.yourdomain.com
+
+# Logging configuration
+logging:
+  level: info
+  retention_days: 30
+  
+# Monitoring alerts
+alerts:
+  - name: "High Error Rate"
+    metric: error_rate
+    condition: "> 5%"
+    duration: 5m
+    
+  - name: "High Response Time"
+    metric: avg_response_time
+    condition: "> 3s"
+    duration: 5m
+    
+  - name: "High Memory Usage"
+    metric: memory_usage
+    condition: "> 85%"
+    duration: 10m
+    
+  - name: "Low Disk Space"
+    metric: disk_usage
+    condition: "> 90%"
+    duration: 5m
+
+# Backup configuration
+backup:
+  enabled: true
+  schedule: "0 2 * * *" # Daily at 2 AM
+  retention: 7 # days
+
+# Database configuration (if using managed database)
+database:
+  type: postgresql
+  version: 15
+  # Connection details will be provided by Excloud
