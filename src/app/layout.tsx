@@ -17,6 +17,25 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   title: "Dibs Fitness - Fitness Management Platform",
   description: "Call dibs on your fitness journey. Manage members, schedules, and payments with ease.",
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+    viewportFit: 'cover'
+  },
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: 'white' },
+    { media: '(prefers-color-scheme: dark)', color: 'black' }
+  ],
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Dibs Fitness'
+  },
+  formatDetection: {
+    telephone: false
+  }
 };
 
 export default function RootLayout({

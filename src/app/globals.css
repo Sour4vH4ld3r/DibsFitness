@@ -83,6 +83,27 @@
   body {
     @apply bg-white text-slate-900 font-sans antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  html {
+    height: -webkit-fill-available;
+  }
+  
+  /* Mobile-specific fixes */
+  @media (max-width: 768px) {
+    body {
+      overflow-x: hidden;
+      position: relative;
+    }
+    
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
   }
   
   /* Focus styles */

@@ -5,7 +5,13 @@ const nextConfig = {
   // Experimental flags to skip type checking
   experimental: {
     typedRoutes: false,
+    optimizeCss: true,
+    scrollRestoration: true,
   },
+  // Enable compression and mobile optimization
+  compress: true,
+  poweredByHeader: false,
+  generateEtags: true,
   eslint: {
     // Only run ESLint on dev, not on production builds
     ignoreDuringBuilds: true,
@@ -17,13 +23,17 @@ const nextConfig = {
   // Skip type checking entirely
   skipBuildOptimizations: true,
   
-  // Image domains
+  // Image domains and optimization
   images: {
     domains: [
       'localhost',
       'ylslhgrdtescqwtmpyqg.supabase.co',
+      'fitness.souravhalder.in'
     ],
     unoptimized: false,
+    formats: ['image/webp', 'image/avif'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
   
   // External packages
