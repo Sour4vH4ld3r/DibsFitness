@@ -4,7 +4,6 @@
 Dibs Fitness is a comprehensive fitness management platform for trainers to manage members, schedules, and payments with ease.
 
 ## ✨ Features
-- 🔐 **Secure Authentication** with Clerk
 - 👥 **Member Management** - Track all your members
 - 📅 **Smart Scheduling** - Let members call dibs on time slots  
 - 💰 **Payment Tracking** - Manage invoices and payments
@@ -14,15 +13,6 @@ Dibs Fitness is a comprehensive fitness management platform for trainers to mana
 
 ## 🚀 Quick Start
 
-### 1. Setup Clerk Authentication
-1. Go to [clerk.com](https://clerk.com) and create a free account
-2. Create a new application
-3. Copy your keys from the Clerk dashboard
-4. Update `.env.local` with your keys:
-```env
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_publishable_key_here
-CLERK_SECRET_KEY=your_secret_key_here
-```
 
 ### 2. Install & Run
 ```bash
