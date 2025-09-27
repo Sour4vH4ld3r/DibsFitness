@@ -1,0 +1,112 @@
+version: '3.8'
+
+services:
+  dibsfitness:
+    image: dibsfitness:latest
+    container_name: dibsfitness-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NODE_ENV=production
+    ports:
+      - "3010:3000"
+    environment:
+      # Application settings
+      - NODE_ENV=production
+      - NEXT_PUBLIC_APP_URL=https://projects.orbitdynamix.in/DibsFitness
+      - NEXT_PUBLIC_BASE_PATH=/DibsFitness
+      
+      # Database connection (update with your actual database details)
+      - DATABASE_URL=${DATABASE_URL}
+      
+      # Authentication secrets
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=https://projects.orbitdynamix.in/DibsFitness
+      
+      # API Keys (if needed)
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}
+      
+      # Email service (if needed)
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      
+      # Monitoring
+      - SENTRY_DSN=${SENTRY_DSN}
+      
+    restart: unless-stopped
+    networks:
+      - dibsfitness-network
+    volumes:
+      # Persist uploads/data if needed
+      - ./uploads:/app/uploads
+      - ./data:/app/data
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Redis for session management/caching
+  redis:
+    image: redis:7-alpine
+    container_name: dibsfitness-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    networks:
+      - dibsfitness-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
+  # Optional: PostgreSQL database (if not using external DB)
+  postgres:
+    image: postgres:15-alpine
+    container_name: dibsfitness-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=dibsfitness
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - dibsfitness-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+
+networks:
+  dibsfitness-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  redis-data:
